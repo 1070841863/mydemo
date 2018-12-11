@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.seve.dao.UserinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.seve.entity.Userinfo" >
+    <id column="UUID" property="uuid" jdbcType="DECIMAL" />
+    <result column="UNAME" property="uname" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    UUID, UNAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from USERINFO
+    where UUID = #{uuid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="Integer" >
+    delete from USERINFO
+    where UUID = #{uuid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.seve.entity.Userinfo" >
+    insert into USERINFO (UUID, UNAME)
+    values (#{uuid,jdbcType=DECIMAL}, #{uname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.seve.entity.Userinfo" >
+    insert into USERINFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        UUID,
+      </if>
+      <if test="uname != null" >
+        UNAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=DECIMAL},
+      </if>
+      <if test="uname != null" >
+        #{uname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.seve.entity.Userinfo" >
+    update USERINFO
+    <set >
+      <if test="uname != null" >
+        UNAME = #{uname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where UUID = #{uuid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.seve.entity.Userinfo" >
+    update USERINFO
+    set UNAME = #{uname,jdbcType=VARCHAR}
+    where UUID = #{uuid,jdbcType=DECIMAL}
+  </update>
+  
+  <select id="getall" parameterType="Userinfo" resultType="Userinfo">
+  select * from (select t.*,rownum row_num from userinfo t order by t.uuid) b where b.row_num between #{begin} and #{pagesize}
+  </select>
+  
+  <select id="getcount" resultType="int">
+  select count(*) from userinfo
+  </select>
+</mapper>
